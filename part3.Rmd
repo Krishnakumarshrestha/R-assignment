@@ -1,0 +1,264 @@
+---
+title: "part III"
+author: "Krishna Kumar Shrestha"
+date: "10/29/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+```
+
+chapter 13
+excersise 13.1
+
+
+
+a. For each of the following, identify the type of variable described:
+numeric-continuous, numeric-discrete, categorical-nominal, or
+categorical-ordinal: 
+
+i) The number of blemishes on the hood of a car coming off a
+production line 
+
+
+> numeric-discrete
+
+ii. A survey question that asks the participant to select from
+Strongly agree, Agree, Neutral, Disagree, and Strongly
+disagree 
+
+> categorical-orginal
+
+iii. The noise level (in decibels) at a concert 
+
+> numeric- continuous
+
+iv. The noise level out of three possible choices: high,
+medium, low 
+
+> categorical-orginal
+
+v. A choice of primary color 
+
+> categorical-nominal
+
+vi. The distance between a cat and a mouse 
+
+> numeric -continious
+
+b. For each of the following, identify whether the quantity discussed
+is a population parameter or a sample statistic. If the latter, also
+identify what the corresponding population parameter is.
+i. The percentage of 50 New Zealanders who own a gaming
+console 
+
+> sample statistic
+
+ii. The average number of blemishes found on the hoods of
+three cars in the No Dodgy Carz yard 
+
+> sample statistic
+
+iii. The proportion of domestic cats in the United States that
+wear a collar 
+
+> population-parameter
+
+iv. The average number of times per day a vending machine is
+used in a year 
+
+> population-parameter
+
+v. The average number of times per day a vending machine is
+used in a year, based on data collected on three distinct days
+in that year 
+
+> sample statistics
+
+
+
+
+
+
+Exercise 13.2
+
+
+a. Obtain, rounded to two decimal places, the proportion of seismic events in the quakes data frame that occurred at a depth of 300 km or deeper.
+
+
+```{r}
+data1<- quakes %>% filter(depth >= 300)
+round(mean(data1$depth),2)
+
+
+```
+b. Remaining with the quakes data set, calculate the mean and
+median magnitudes of the events that occurred at a depth of
+300 km or deeper.
+
+
+```{r}
+mean(data1$mag)
+median(data1$mag)
+
+```
+
+c. Using the chickwts data set, write a for loop that gives you the
+mean weight of chicks for each feed type—the same as the results
+given by the tapply function in Section 13.2.1. Display the results
+rounded to one decimal place and, when printing, ensure each
+mean is labeled with the appropriate feed type.
+
+
+
+```{r}
+for (i in levels(chickwts$feed)) {
+      cat("Feed ",i,"has the average wheight of: ",
+          mean(chickwts$weight[chickwts$feed==i]),".\n",sep="")
+}
+```
+
+Another ready-to-use data set (in the automatically loaded datasets
+package) is InsectSprays. It contains data on the number of insects
+found on various agricultural units, as well as the type of insect spray
+that was used on each unit. Ensure you can access the data frame at
+the prompt; then study the help file ?InsectSprays to get an idea of R’s
+representation of the two variables.
+d. Identify the two variable types in InsectSprays 
+
+
+
+> Variables: count is numerical-discrete, spray is categorical-nominal 
+
+
+e. Calculate the modes of the distribution of insect counts, regardless of spray type.
+
+
+```{r}
+insecttable<-table(InsectSprays$count)
+insecttable[insecttable==max(insecttable)]
+
+
+```
+
+
+f. Use tapply to report the total insect counts by each spray type
+
+
+
+```{r}
+tapply(InsectSprays$count, InsectSprays$spray, sum)
+
+
+```
+g. Using the same kind of for loop as in (c), compute the percentage of agricultural units in each spray type group that had at least five bugs on them. When printing to the screen, round the
+percentages to the nearest whole number.
+
+
+
+```{r}
+
+for (i in levels(InsectSprays$spray)) {
+      cat("Spray ",i,"has a mean of: ",
+          round(mean(InsectSprays$count[InsectSprays$spray == i] >= 5)*100),
+          "% when counting only >=5.\n",sep="")
+}
+```
+
+
+
+h. Obtain the same numeric results as in (g), with rounding, but use tapply and a disposable function.
+
+```{r}
+tapply(InsectSprays$count, 
+       InsectSprays$spray, 
+       function(x){round(mean(x>=5)*100,2)})
+```
+
+
+
+
+
+
+
+Exercise 13.3
+
+
+a. Using the chickwts data frame, compute the 10th, 30th, and
+90th percentiles of all the chick weights and then use tapply to
+determine which feed type is associated with the highest sample
+variance of weights.
+
+
+```{r}
+quantile(chickwts$weight,c(0.1,0.3,0.9))
+
+chicksvar<-tapply(chickwts$weight,chickwts$feed,var)
+chicksvar[chicksvar==max(chicksvar)]
+```
+
+
+
+b. Turn to the seismic event data in quakes and complete the following tasks:
+i. Find the IQR of the recorded depths.
+
+
+```{r}
+IQR(quakes$depth)
+```
+
+ii. Find the five-number summary of all magnitudes of seismic
+events that occur at a depth of 400 km or deeper. Compare
+this to the summary values found in Section 13.2.3 of those
+events occurring at less than 400 km and briefly comment
+on what you notice.
+
+
+```{r}
+summary(quakes$mag[quakes$depth<=400])
+
+#comparing it with the summary of quakes with depths> 400. the deeper, the 
+#weaker it gets
+```
+
+
+
+
+iii. Use your knowledge of cut (Section 4.3.3) to create a new
+factor vector called depthcat that identifies four evenly
+spaced categories of quakes$depth so that when you use
+levels(depthcat), it gives the following
+
+
+```{r}
+depthcat<-cut(quakes$depth,
+              breaks=(seq(min(quakes$depth),max(quakes$depth),length=5)),
+              right=T,
+              include.lowest = T)
+```
+
+
+
+iv. Find the sample mean and standard deviation of the magnitudes of the events associated with each category of depth
+according to depthcat
+
+
+```{r}
+tapply(quakes$mag,depthcat,mean)
+tapply(quakes$mag,depthcat,sd)
+```
+
+
+
+v. Use tapply to compute the 0.8th quantile of the magnitudes
+of the seismic events in quakes, split by depthcat.
+
+
+
+```{r}
+tapply(quakes$mag,depthcat,quantile,prob=0.8)
+```
+
+
