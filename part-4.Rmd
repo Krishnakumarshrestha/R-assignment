@@ -1,0 +1,1393 @@
+---
+title: "Part IV"
+author: "Krishna Kumar Shrestha"
+date: "10/31/2020"
+output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+library(tidyverse)
+
+
+```
+
+# Chapter 17:SAMPLING DISTRIBUTIONS AND CONFIDENCE
+
+Exercise 17.1
+
+teacher wants to test all of the 10th-grade students at his school to
+gauge their basic mathematical understanding, but the photocopier breaks
+after making only six copies of the test. With no other choice, he
+chooses six students at random to take the test. Their results, recorded
+as a score out of 65, have a sample mean of 41.1. The standard deviation
+of the marks of this test is known to be 11.3. a. Find the standard
+error associated with the mean test score.
+
+```{r}
+mean <- 41.1
+sd <- 11.3
+n <- 6
+se <- sd / sqrt(n)
+```
+
+b.  Assuming the scores themselves are normally distributed, evaluate
+    the probability that the mean score lies between 45 and 55 if the
+    teacher took another sample of the same size.
+
+```{r}
+pnorm(55, mean, se) - pnorm(45, mean, se)
+```
+
+c.  A student who gets less than half the questions correct receives a
+    failing grade (F). Find the probability that the average score is an
+    F based on another sample of the same size.
+
+```{r}
+pnorm(65 / 2, mean, se)
+```
+
+A marketing company wants to find out which of two energy drinks
+teenagers prefer---drink A or drink B. It surveys 140 teens, and the
+results indicate that only 35 percent prefer drink A. d. Use a quick
+check to decide whether it is valid to use the normal distribution to
+represent the sampling distribution of this proportion.
+
+```{r}
+n <- 140
+p <- 0.35 #probability of A being choosed
+p * n >= 5 & n * (1 - p) >= 5
+
+
+
+
+
+```
+
+e.  What is the probability that in another sample of the same size, the
+    proportion of teenagers who prefer drink A is greater than 0:4?
+
+```{r}
+
+se <- sqrt(p * (1 - p) / n)   # to be able to use it in the normal formula for
+                              # sample below
+1 - pnorm(0.4, p, se)
+
+```
+
+f.  Find the two values of this sampling distribution that identify the
+    central 80 percent of values of the proportion of interest.
+
+```{r}
+upper<-qnorm(0.9,p,se)
+lower<-qnorm(0.1,p,se)
+```
+
+In Section 16.2.4, the time between cars passing an individual's
+location was modeled using an exponential distribution. Say that on the
+other side of town, her friend is curious about a similar problem.
+Standing outside her house, she records 63 individual times between cars
+passing. These sampled times have a mean of ¯x = 37:8 seconds with a
+standard deviation of s = 34:51 seconds.
+
+g.  The friend inspects a histogram of her raw measurements and notices
+    that her raw data are heavily right-skewed. Briefly identify and
+    describe the nature of the sampling distribution with respect to the
+    sample mean and calculate the appropriate standard error.
+
+```{r}
+n<-63
+xmean<-37.8
+s<-34.51
+
+
+
+# This is a normal curve as it is regarding a mean of samples.
+se <- s/sqrt(n)
+df <- n - 1
+```
+
+h.  Using the standard error from (g) and the appropriate probability
+    distribution, calculate the probability that in another sample of
+    the same size, the sample mean time between cars passing is as
+    follows:
+i.  More than 40 seconds
+
+```{r}
+#i but as it is regarding a sample, it works as a normal.
+#all 
+
+newx <- (40 - xmean) / se
+1 - pt(newx, df)
+
+```
+
+ii. Less than half a minute
+
+```{r}
+newx <- (30 - xmean) / se
+pt(newx, df)
+```
+
+iii. Between the given sample mean and 40 seconds
+
+```{r}
+newx <- (40 - xmean) / se
+pt(newx,df)-0.5
+```
+
+Exercise 17.2
+
+casual runner records the average time it takes him to sprint 100
+meters. He completes the dash 34 times under identical conditions and
+finds that the mean of these is 14.22 seconds. Assume that he knows the
+standard deviation of his runs is X = 2:9 seconds. a. Construct and
+interpret a 90 percent confidence interval for the true mean time.
+
+```{r}
+n=34
+x.bar<-14.22
+sigma<-2.9
+
+alpha<-1-.9
+
+x.bar+c(-1,1)*qnorm(1-alpha/2)*(sigma/sqrt(n))
+```
+
+b.  Repeat (a), but this time, assume that the standard deviation is not
+    known and that s = 2:9 is estimated from the sample. How, if at all,
+    does this change the interval?
+
+```{r}
+s<-2.9
+x.bar+c(-1,1)*qt(1-alpha/2,df=n-1)*(s/sqrt(n))
+```
+
+In a particular country, the true proportion of citizens who are left
+handed or ambidextrous is unknown. A random sample of 400 people is
+taken, and each individual is asked to identify with one of three
+options: right-handed only, left-handed only, or ambidextrous. The
+results show that 37 selected left-handed and 11 selected ambidextrous.
+c. Calculate and interpret a 99 percent CI for the true proportion of
+left-handed-only citizens.
+
+```{r}
+n<-400
+# Option A is right-handed
+# Option B is left-handed
+# Option C is ambidextrous
+
+p.b<-37/n
+p.c<-11/n
+p.a<-1-p.b-p.c
+alpha<-1-0.99
+p.b+
+      (c(-1,1)*qnorm(1-alpha/2))*
+      sqrt(p.b*(1-p.b)/n)
+
+
+```
+
+d.  Calculate and interpret a 99 percent CI for the true proportion of
+    citizens who are either left-handed or ambidextrous.
+
+```{r}
+(p.b + p.c)+
+      c(-1, 1) * qnorm(1 - alpha / 2) *
+      (sqrt((p.b + p.c) * (1 - (p.b + p.c)) / n))
+```
+
+In Section 17.2.4, the technical interpretation of a CI with respect to
+its confidence level was described as the proportion of many similar
+intervals (that is, when calculated for samples of the same size from
+the same population) that contain the true value of the parameter of
+interest.
+
+e.  Your task is to write an example to demonstrate this behavior of
+    confidence intervals using simulation. To do so, follow these
+    instructions: -- Set up a matrix (see Chapter 3) filled with NAs
+    (Chapter 6) that has 5,000 rows and 3 columns. -- Use skills from
+    Chapter 10 to write a for loop that, at each of 5,000 iterations,
+    generates a random sample of size 300 from an exponential
+    distribution with rate parameter e = 0:1 (Section 16.2.4). --
+    Evaluate the sample mean and sample standard deviation of each
+    sample, and use these quantities with the critical values from the
+    appropriate sampling distribution to calculate a 95 percent CI for
+    the true mean of the distribution. -- Within the for loop, the
+    matrix should now be filled, row by row, with your results. The
+    first column will contain the lower limit, the second will contain
+    the upper limit, and the third column will be a logical value that
+    is TRUE if the corresponding interval contains the true mean of 1=e
+    and that is FALSE otherwise. -- When the loop is completed, compute
+    the proportion of TRUEs in the third column of the filled matrix.
+    You should find that this proportion is close to 0:95; this will
+    vary randomly each time you rerun the loop.
+
+```{r}
+x.mat<-matrix(NA,5000,3)
+n<-300
+lambda<-0.1
+mu<-1/lambda
+
+for(i in 1:nrow(x.mat)) {
+      
+      sample <- rexp(n, lambda)
+
+      limits <- mean(sample) +
+            c(-1, 1) * qt(1-0.05/2, df= n-1) *
+            (sd(sample) / sqrt(n))
+      x.mat[i, 1:2] <- limits
+      x.mat[i,3]<- mu>=limits[1]&mu<=limits[2] #This returns a T F vector
+
+}
+
+mean(x.mat[,3])
+
+
+#Forth Part ----
+#plot the 100 first CI with the average in the middle
+
+xaxis<-seq(mu-3,mu+3,length=100)
+yaxis<-1:100
+
+plot(xaxis, yaxis, type = "n") +
+      abline(v = 10, lty = 2) +
+      for (i in 1:length(xaxis)) {
+            lines(c(x.mat[i, 1], x.mat[i, 2]),
+                  c(i, i),
+                  col = if (x.mat[i, 1] < 10 & x.mat[i, 2] > 10) {
+                        "blue"
+                  } else{
+                        "red"
+                  })
+            
+            
+            
+      }
+dev.off()    
+```
+
+# chapter 18 HYPOTHESIS TESTING
+
+Exercise 18.1 a. Adult domestic cats of a certain breed are said to have
+an average weight of 3.5 kilograms. A feline enthusiast disagrees and
+collects a sample of 73 weights of cats of this breed. From her sample,
+she calculates a mean of 3.97 kilograms and a standard deviation of 2.21
+kilograms. Perform a hypothesis test to test her claim that the true
+mean weight  is not 3.5 kilograms by setting up the appropriate
+hypothesis, carrying out the analysis, and interpreting the p-value
+(assume the significance level is  = 0:05).
+
+```{r}
+
+mu<-3.5
+
+n<-73
+x.bar<-3.97
+x.sd<-2.21
+#significance = 0.05
+#H0<- 3.35
+#ha != h0
+
+#solution
+t<-(x.bar-mu)/(x.sd/sqrt(n))
+p<-pt(-t,df=n-1)+(1-pt(t,df=n-1))
+# the probability is greater than the alpha (significance value). For this 
+# reason, we don't have reasons to believe the H0 is not true.
+
+CI<- x.bar+c(-1,1)*qt(0.975,n-1)*x.sd/sqrt(n)
+#the CI contains the H0. reassuring the t-test
+```
+
+b.  Suppose it was previously believed that the mean magnitude of
+    seismic events off the coast of Fiji is 4.3 on the Richter scale.
+    Use the data in the mag variable of the ready-to-use quakes data
+    set, providing 1,000 sampled seismic events in that area, to test
+    the claim that the true mean magnitude is in fact greater than 4.3.
+    Set up appropriate hypotheses, use t.test (conduct the test at a
+    significance level of  = 0:01), and draw a conclusion.
+
+```{r}
+#mean magnitude of sismic events on fiji
+mu<-4.3
+# Hypothesis Test is: ha>h0
+alpha<-0.01
+remove(x.bar)
+
+t.test(quakes$mag,mu=mu,alternative="greater",conf.level=1-alpha)
+#p.value is too small. A strong evidence the true magnitude is greater than 4.3
+```
+
+c.  Manually compute a two-sided confidence interval for the true mean
+    of (b)
+
+```{r}
+n<-length(quakes$mag)
+CI<-mean(quakes$mag)+
+      c(-1,1)*qt(1-0.01/2,n-1)*
+      sd(quakes$mag)/sqrt(n)
+#the CI interval does not contain the h0 mean for the true mean value.
+```
+
+Exercise 18.2
+
+In the package MASS you'll find the data set anorexia, which contains
+data on pre- and post-treatment weights (in pounds) of 72 young women
+suffering from the disease, obtained from Hand et al. (1994). One group
+of women is the control group (in other words, no intervention), and the
+other two groups are the cognitive behavioral program and family support
+intervention program groups. Load the library and ensure you can access
+the data frame and understand its contents. Let d denote the mean
+difference in weight, computed as (post-weight 􀀀 pre-weight).
+
+\<\n\> a. Regardless of which treatment group the participants fall
+into, conduct and conclude an appropriate hypothesis test with  = 0:05
+for the entire set of weights for the following hypotheses:
+
+```{r}
+library(MASS)
+data(anorexia)
+alpha<-0.05
+#H0: d.mu=0 // HA: d.mu>0 The dist is a Student one
+
+t.test(anorexia[,3],
+       anorexia[,2],
+       alternative = "greater",
+       paired=TRUE)
+
+#there is strong evidence to accept H0, as the p.value is small.
+```
+
+b.  Next, conduct three separate hypothesis tests using the same defined
+    hypotheses, based on which treatment group the participants fall
+    into. What do you notice?
+
+```{r}
+# Now a test for all the treatments
+#Cont
+t.test(anorexia[anorexia$Treat=="Cont",3],
+       anorexia[anorexia$Treat=="Cont",2],
+       alternative="greater",
+       paired=TRUE)
+# There is no statistical evidence to reject the claim that there is no 
+# difference between  pre and post mean in the control group.
+
+#CBT
+t.test(anorexia[anorexia$Treat=="CBT",3],
+       anorexia[anorexia$Treat=="CBT",2],
+       alternative="greater",
+       paired=TRUE)
+# There is mild statistical evidence to accept that the post mean is greater 
+# than the pre mean in the CBT group.
+
+#FT
+t.test(anorexia[anorexia$Treat=="FT",3],
+       anorexia[anorexia$Treat=="FT",2],
+       alternative="greater",
+       paired=TRUE)
+
+# There is strong statistical evidence to accept that in the FT group the mean 
+#of post measurement is greater than the pre weight.
+```
+
+Another ready-to-use data set in R is PlantGrowth (Dobson, 1983), which
+records a continuous measure of the yields of a certain plant, looking
+at the potential effect of two supplements administered during growth to
+increase the yield when compared to a control group with no supplement.
+
+c.  Set up hypotheses to test whether the mean yield for the control
+    group is less than the mean yield from a plant given either of the
+    treatments. Determine whether this test should proceed using a
+    pooled estimate of the variance or whether Welch's t-test would be
+    more appropriate.
+
+```{r}
+head(PlantGrowth)
+levels(PlantGrowth[, 2])
+data.1 <- PlantGrowth[PlantGrowth$group == "ctrl", ]
+data.2 <- PlantGrowth[PlantGrowth$group != "ctrl", ]
+#Hypotheses--> H0: ctrlmean-trtmean=0 // HA: ctrlmean-trtmean<0 
+
+#Rule of thumb
+sd(PlantGrowth[PlantGrowth$group != "ctrl",1])/
+      sd(PlantGrowth[PlantGrowth$group == "ctrl",1])
+      
+# The rule of thumb states that there is enought to accept both variances are
+# the same for that, we well use the pooled variance estimative test
+```
+
+d.  Conduct the test and make a conclusion (assuming normality of the
+    raw observations).
+
+```{r}
+t.test(PlantGrowth[PlantGrowth$group == "ctrl", 1],
+       PlantGrowth[PlantGrowth$group != "ctrl", 1],
+       alternative="less",
+       var.equal = TRUE)
+# The p.value ~0.41 there is no evidence to reject H0 as it is bigger than the 
+#alpha 0.05. There is insufficient statistical evidence that the trtmean is 
+# greater than the ctrl mean
+```
+
+As discussed, there is a rule of thumb for deciding whether to use a
+pooled estimate of the variance in an unpaired t-test. e. Your task is
+to write a wrapper function that calls t.test after deciding whether it
+should be executed with var.equal=FALSE according to the rule of thumb.
+Use the following guidelines: -- Your function should take four defined
+arguments: x and y with no defaults, to be treated in the same way as
+the same arguments in t.test; and var.equal and paired, with defaults
+that are the same as the defaults of t.test. -- An ellipsis (Section
+9.2.5) should be included to represent any additional arguments to be
+passed to t.test. -- Upon execution, the function should determine
+whether paired=FALSE. \* If paired is TRUE, then there is no need to
+proceed with the check of a pooled variance. \* If paired is FALSE, then
+the function should determine the value for var.equal automatically by
+using the rule of thumb. -- If the value of var.equal was set
+automatically, you can assume it will override any value of this
+argument initially supplied by the user. -- Then, call t.test
+appropriately.
+
+```{r}
+my.t.test <- function(x,
+                      y,
+                      var.equal = FALSE,
+                      paired = FALSE,
+                      ...) {
+      if (!paired) {
+            var.equal <- max(c(sd(x), sd(y))) /
+                  min(c(sd(x), sd(y))) < 2
+      }
+      return(t.test(
+            x = x,
+            y = y,
+            var.equal = var.equal,
+            paired = paired,
+            ...
+      ))
+}
+my.t.test2 <- function(x,
+                      y,
+                      var.equal = FALSE,
+                      paired = FALSE,
+                      ...) {
+      if (paired) {
+            var.equal <- max(c(sd(x), sd(y))) /
+                  min(c(sd(x), sd(y))) < 2
+      }
+      return(t.test(
+            x = x,
+            y = y,
+            var.equal = var.equal,
+            paired = paired,
+            ...
+      ))
+}
+
+```
+
+f.  Try your new function on all three examples in the text of Section
+    18.2.2, ensuring you reach identical results.
+
+```{r}
+#i 
+snacks <- c(87.7,80.01,77.28,78.76,81.52,74.2,80.71,79.5,77.87,81.94,80.7,82.32,
+            75.78,80.19,83.91,79.4,77.52,77.62,81.4,74.89,82.95,73.59,77.92,77.18,
+            79.83,81.23,79.28,78.44,79.01,80.47,76.23,78.89,77.14,69.94,78.54,79.7,
+            82.45,77.29,75.52,77.21,75.99,81.94,80.41,77.7)
+snacks2 <- c(80.22,79.73,81.1,78.76,82.03,81.66,80.97,81.32,80.12,78.98,79.21,
+             81.48,79.86,81.06,77.96,80.73,80.34,80.01,81.82,79.3,79.08,79.47,
+             78.98,80.87,82.24,77.22,80.03,79.2,80.95,79.17,81)
+my.t.test(snacks2,snacks,alternative="greater")
+
+
+#ii
+men <- c(102,87,101,96,107,101,91,85,108,67,85,82)
+women <- c(73,81,111,109,143,95,92,120,93,89,119,79,90,126,62,92,77,106,105,111)
+
+my.t.test(men,women,alternative="two.sided")
+
+#iii
+rate.before <- c(52,66,89,87,89,72,66,65,49,62,70,52,75,63,65,61) 
+rate.after <- c(51,66,71,73,70,68,60,51,40,57,65,53,64,56,60,59) 
+
+my.t.test(rate.after,rate.before,alternative="less",paired=TRUE)
+```
+
+Exercise 18.3
+
+An advertisement for a skin cream claims nine out of ten women who use
+it would recommend it to a friend. A skeptical salesperson in a
+department store believes the true proportion of women users who'd
+recommend it, , is much smaller than 0:9. She follows up with 89 random
+customers who had purchased the skin cream and asks if they would
+recommend it to others, to which 71 answer yes.
+
+a.  Set up an appropriate pair of hypotheses for this test and determine
+    whether it will be valid to carry out using the normal distribution.
+
+```{r}
+#Hypotheses: H0: p=0.9 // HA: p<0.9
+p<-0.9
+n<-89
+x<-71
+p.hat<-x/n
+n*p.hat>5&n*(1-p.hat)>5
+#as both are true, we can accept the to carry out with a normal distribution
+```
+
+b.  Compute the test statistic and the p-value and state your conclusion
+    for the test using a significance level of  = 0:1.
+
+```{r}
+z.test<-(p.hat-p)/(sqrt(p*(1-p)/n))
+pnorm(z.test)
+#the P-value is too small. with 99% of confidence, there is  enought statistical
+#evidenve to reject H0 in favor of HA.
+```
+
+c.  Using your estimated sample proportion, construct a two-sided 90
+    percent confidence interval for the true proportion of women who
+    would recommend the skin cream.
+
+```{r}
+p.hat+c(-1,1)*qnorm(0.99)*sqrt(p*(1-p)/n)
+#this result corroborates the answer in "B" as it excludes the claimmed mean of 
+#0.9
+```
+
+The political leaders of a particular country are curious as to the
+proportion of citizens in two of its states that support the
+decriminalization of marijuana. A small pilot survey taken by officials
+reveals that 97 out of 445 randomly sampled voting-age citizens residing
+in state 1 support the decriminalization and that 90 out of 419
+votingage citizens residing in state 2 support the same notion.
+
+d.  Letting 1 denote the true proportion of citizens in support of
+    decriminalization in state 1, and 2 the same measure in state 2,
+    conduct and conclude a hypothesis test under a significance level of
+     = 0:05 with reference to the following hypotheses:
+
+```{r}
+x1<-97
+n1<-445
+x2<-90
+n2<-419
+
+p.hat1<-x1/n1
+p.hat2<-x2/n2
+
+#d
+alpha<-0.05
+#Hypotheses:: H0: p2-p1 =0 // HA:p2-p1 != 0
+prop.test(c(x2,x1),
+          c(n2,n1),
+          alternative = "two.sided",
+          conf.level = 1-alpha,
+          correct = FALSE)
+#the P-value is a big one. There is not enought statistical evidence that 
+#the probability is different in each country. Pooled Variance
+p<-(x1+x2)/(n1+n2)
+#testing with the manual calculation
+z<-(p.hat2-p.hat1)/(sqrt(p*(1-p)*(1/n1+1/n2)))
+pval<-2*pnorm(z)
+```
+
+e.  Compute and interpret a corresponding CI. Though there is standard,
+    ready-to-use R functionality for the t-test, at the time of this
+    writing, there is no similar function for the Z-test (in other
+    words, the normal-based test of proportions described here) except
+    in contributed packages.
+
+```{r}
+# statistic+critical Value*SE
+se<-sqrt(p*(1-p)*(1/n1+1/n2))
+(p.hat2-p.hat1)+c(-1,1)*qnorm(1-alpha/2)*se
+#the CI includes the value 0 reassuring that both states might have the same 
+# proportion.
+```
+
+f.  Your task is to write a relatively simple R function, Z.test, that
+    can perform a one- or two-sample Z-test, using the following
+    guidelines: -- The function should take the following arguments: p1
+    and n1 (no default) to pose as the estimated proportion and sample
+    size; p2 and n2 (both defaulting to NULL) that contain the second
+    sample proportion and sample size in the event of a two-sample test;
+    p0 (no default) as the null value; and alternative (default
+    "two.sided") and conf.level (default 0.95), to be used in the same
+    way as in t.test. -- When conducting a two-sample test, it should be
+    p1 that is tested as being smaller or larger than p2 when
+    alternative="less" or alternative="greater", the same as in the use
+    of x and y in t.test. -- The function should perform a one-sample
+    Z-test using p1, n1, and p0 if either p2 or n2 (or both) is NULL.
+
+-- The function should contain a check for the rule of thumb to ensure
+the validity of the normal distribution in both one- and two-sample
+settings. If this is violated, the function should still complete but
+should issue an appropriate warning message (see Section 12.1.1). -- All
+that need be returned is a list containing the members Z (test
+statistic), P (appropriate p-value---this can be determined by
+alternative; for a two-sided test, determining whether Z is positive or
+not can help), and CI (two-sided CI with respect to conf.level).
+
+```{r}
+z.test <- function(p1,
+                   n1,
+                   p2 = NULL,
+                   n2 = NULL,
+                   p0,
+                   alternative = "two.sided",
+                   conf.level = 0.95) {
+      
+      if(is.null(p2)|is.null(n2)){
+            cat("One sample Z-Test\n")
+            if(p1*n1||n1*(1-p1)){
+                  warning("normal distribution may not be valid")
+            }
+            z<-(p1-p0)/sqrt(p0*(1-p0)/n1)
+            CI<-(p1)+c(-1,1)*qnorm(1-conf.level/2)*sqrt(p0*(1-p0)/n1)
+      }else{
+            cat("two-sample test")
+            if(p1*n1<5||n1*(1-p1)<5||n2*p2<5||n2*(1-p2)<5){
+                  warning("Normal distribution might not be accurate as rule 
+                          of thumb")
+            }
+            p.star(((n1*p1)+(n2*p2))/n1+n2)
+            z<-(p1-p2-p0)/sqrt(p.star*(1-p.star)*(1/n1+1/n2))
+            CI<-(p1-p1)+c(-1,1)*qnorm(1-conf.level/2)*
+                  sqrt(p.star*(1-p.star)*(1/n1+1/n2))
+            }
+      #defining p-value
+      p<-pnorm(z)
+      if(alternative=="greater"){
+            p<-1-p
+      }
+      if(alternative=="two.sided"){
+            if(z>0){
+                  p<-2*(1-p)
+            }else{
+                  p<-2*p
+            }
+      }
+      return(list(Z=z,P=p,CI=CI))
+}
+
+sick <- c(0,0,1,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,1,1,0,0,0,1)
+n.sick<-length(sick)
+p.sick<-sum(sick)/n.sick
+```
+
+g.  Replicate the two examples in the text of Sections 18.3.1 and 18.3.2
+    using Z.test; ensure you reach identical results.
+h.  Call Z.test(p1=0.11,n1=10,p0=0.1) to try your warning message in the
+    one-sample setting.
+
+Exercise 18.4
+
+HairEyeColor is a ready-to-use data set in R that you haven't yet come
+across. This 4 \* 4 \* 2 array provides frequencies of hair and eye
+colors of 592 statistics students, split by sex (Snee, 1974).
+
+a.  Perform and interpret, at a significance level of  = 0:01, a
+    chisquared test of independence for hair against eye color for all
+    students, regardless of their sex.
+
+```{r}
+data(HairEyeColor)
+total.hec<-HairEyeColor[,,1]+HairEyeColor[,,2]
+
+chisq.test(total.hec)
+#H0:: Variables A and B are Independent // Ha: Variables are not independent
+# We have a very small p.number. A strong statistical evidence to reject H0
+```
+
+In Exercise 8.1 on page 161, you accessed the Duncan data set of the
+contributed package car, which contains markers of job prestige
+collected in 1950. Install the package if you haven't already and load
+the data frame. b. The first column of Duncan is the variable type,
+recording the type of job as a factor with three levels: prof
+(professional or managerial), bc (blue collar), and wc (white collar).
+Construct appropriate hypotheses and perform a chi-squared GOF test to
+determine whether the three job types are equally represented in the
+data set. i. Interpret the resulting p-value with respect to a
+significance level of  = 0:05.
+
+ii. What conclusion would you reach if you used a significance level of
+     = 0:01?
+
+```{r}
+library("car")
+Duncan[,1]
+
+c.prof<-length(Duncan[Duncan[,1]=="prof",1])
+c.bc<-length(Duncan[Duncan[,1]=="bc",1])
+c.wc<-length(Duncan[Duncan[,1]=="wc",1])
+
+
+Duncan.tab<-table(Duncan[,1])
+
+#Hypotheses: H0: p1=p2=p3=1 //Ha: h0 is incorrect
+
+chisq.test(Duncan.tab)
+
+#the P-value is lesser than the alpha=0.05, there is enough evidence to believe 
+# the Variables are dependent, following Ha
+
+#B
+#with alpha=0.01, the p.value becomes greater than it, we tend with H0, the 
+#variables are independent. 
+```
+
+Exercise 18.5
+
+a.  Write a new version of typeI.tester called typeI.mean. The new
+    function should be able to simulate the Type I error rate for tests
+    of a single mean in any direction (in other words, oneor two-sided).
+    The new function should take an additional argument, test, which
+    takes a character string "less", "greater", or "two.sided" depending
+    on the type of desired test. You can achieve this by modifying
+    typeI.tester as follows: -- Instead of calculating and storing the
+    p-values directly in the for loop, simply store the test statistic.
+
+-- When the loop is complete, set up stacked if-else statements that
+cater to each of the three types of test, calculating the p-value as
+appropriate. -- For the two-sided test, remember that the p-value is
+defined as twice the area "more extreme" than the null. Computationally,
+this means you must use the upper-tail area if the test statistic is
+positive and the lower-tail area otherwise. If this area is less than
+half of  (since it is subsequently multiplied by 2 in a "real"
+hypothesis test), then a rejection of the null should be flagged. -- If
+the value of test is not one of the three possibilities, the function
+should throw an appropriate error using stop. i. Experiment with your
+function using the first example setting in the text with 0 = 0,  = 1,
+n = 40, and  = 0:05. Call typeI.mean three times, using each of the
+three possible options for test. You should find that all simulated
+results sit close to 0:05.
+
+```{r}
+typeI.mean<-function(mu0,sigma,n,alpha,ITERATIONS=10000,test="less"){
+      
+      t.stat<-rep(NA,ITERATIONS)
+      pvals<-rep(NA,ITERATIONS)
+      for(i in 1:ITERATIONS){
+            temporary.sample<-rnorm(n=n,mean=mu0,sd=sigma)
+            temporary.mean<-mean(temporary.sample)
+            temporary.sd<-sd(temporary.sample)
+            t.stat[i]<-(temporary.mean-mu0)/(temporary.sd/sqrt(n))
+      }
+      if(test=="less"){
+        pvals<-pt(t.stat,df=n-1)    
+      }else 
+            if(test=="greater"){
+            pvals<-1-pt(t.stat,df=n-1)
+      }else 
+            if(test=="two.sided"){
+            pvals[t.stat>=0]<-2*(1-pt(t.stat[t.stat>=0],df=n-1))
+            pvals[t.stat<0]<-2*pt(t.stat[t.stat<0],df=n-1)
+            
+            }else {
+            stop("Not a valid test input, please use \"less\",\"greater\", or 
+\"two.sided\"")
+      }
+      return(mean(pvals<alpha))
+}
+
+# i
+typeI.mean(0,1,40,0.05,test="less")
+typeI.mean(0,1,40,0.05,test="greater")
+typeI.mean(0,1,40,0.05,test="two.sided")
+
+```
+
+ii. Repeat (i) using the second example setting in the text with 0 =
+    􀀀4,  = 0:3, n = 60, and  = 0:01. Again, you should find that all
+    simulated results sit close to the value of .
+
+```{r}
+typeI.mean(-4,0.3,60,0.01,test="less")
+typeI.mean(-4,0.3,60,0.01,test="greater")
+typeI.mean(-4,0.3,60,0.01,test="two.sided")
+```
+
+b.  Modify typeII.tester in the same way as you did typeI.tester; call
+    the new function typeII.mean. Simulate the Type II error rates for
+    the following hypothesis tests. As per the text, assume A, , ,
+    and n denote the true mean, standard deviation of raw observations,
+    significance level, and sample size, respectively.
+
+```{r}
+typeII.mean<-function(mu0,muA,sigma,n,alpha,test="two.sided",ITERATIONS=10000){
+      test.t<-rep(NA,ITERATIONS)
+      for(i in 1:ITERATIONS){
+            temporary.sample<-rnorm(n=n,mean=muA,sd=sigma)
+            temporary.mean<-mean(temporary.sample)
+            temporary.sd<-sd(temporary.sample)
+            test.t[i]<-(temporary.mean-mu0)/(temporary.sd/sqrt(n))
+      }
+      pvals<-pt(test.t,df=n-1)
+      if(test=="less"){
+            return(mean(pvals>=alpha))
+      }else if(test=="greater"){
+            return(mean(1-pvals>=alpha))
+      }else if(test=="two.sided"){
+            result <- pvals
+            result[test.t>0] <- 1-pvals[test.t>0]
+            return(mean(result>=alpha/2))
+      }else {
+            stop("argument \"test\" is not valid. Please use \"less\", 
+\"greater\" or \"two.sided\"")
+      }
+}
+
+#i
+typeII.mean(-3.2,-3.3,0.1,25,0.05,"two.sided")
+#ii
+typeII.mean(8994,5600,3888,9,0.01,"less")
+#iii
+typeII.mean(0.44,0.4,2.4,68,0.05,"greater")
+```
+
+Exercise 18.6
+
+a.  For this exercise you'll need to have written typeII.mean from
+    Exercise 18.5 (b). Using this function, modify power.tester so that
+    a new function, power.mean, calls typeII.mean instead of calling
+    typeII.tester.
+
+```{r}
+power.mean<-function(nvec,...){
+      nlen<-length(nvec)
+      result<-rep(NA,nlen)
+      pbar<-txtProgressBar(min=0,max=nlen,style=3)
+      for(i in 1:nlen){
+            result[i]<-1-typeII.mean(n=nvec[i],...)
+            setTxtProgressBar(pbar,i)
+      }
+      close(pbar)
+      return(result)
+}
+
+#i
+sample.sizes=5:100
+power.mean(nvec=50,mu0=10,muA=10.5,sigma=0.9,alpha=0.01,test="two.sided")
+
+#ii
+power.mean(nvec=44,mu0=80,muA=78.5,sigma=3.1,alpha=0.05,test="two.sided")
+
+power.mean(nvec=44,mu0=80,muA=78.5,sigma=3.1,alpha=0.01,test="two.sided")
+```
+
+b.  Staying with the snacks hypothesis test, using the sample.sizes
+    vector from the text, determine the minimum sample size required for
+    a statistically powerful test using both  = 0:05 and  = 0:01.
+    Produce a plot showing the two power curves.
+
+```{r}
+snacks <- c(87.7,80.01,77.28,78.76,81.52,74.2,80.71,79.5,77.87,81.94,80.7,82.32,
+            75.78,80.19,83.91,79.4,77.52,77.62,81.4,74.89,82.95,73.59,77.92,
+            77.18,79.83,81.23,79.28,78.44,79.01,80.47,76.23,78.89,77.14,69.94,
+            78.54,79.7,82.45,77.29,75.52,77.21,75.99,81.94,80.41,77.7)
+
+sample.sizes<- 5:100
+
+
+
+
+```
+
+# chapter 19: ANALYSIS OF VARIANCE
+
+Exercise 19.1
+
+These figures provide the depths (in centimeters) at which important
+archaeological finds were made at four sites in New Mexico (see Woosley
+and Mcintyre, 1996). Store these data in your R workspace, with one
+vector containing depth and the other vector containing the site of each
+observation.
+
+```{r}
+info<-data.frame("dep"=c(93,120,65,105,115,82,99,87,100,90,78,95,93,88,110,85,
+                         45,80,28,75,70,65,55,50,40,100,75,65,40,73,65,50,30,
+                         45,50,45,55,96,58,95,90,65,80,85,95,82),
+                 "site"=c(rep("Site i",15),
+                          rep("Site ii",10),
+                          rep("Site iii",12),
+                          rep("Site iv",9)))
+```
+
+a.  Produce side-by-side boxplots of the depths split by group, and use
+    additional points to mark the locations of the sample means.
+
+```{r}
+infomean<-tapply(info$dep,info$site,mean)
+
+boxplot(info$dep~info$site,
+        xlab="Site",
+        ylab="Depth (cm)",
+        main="Boxplot of Depth by cm by Site")
+points(1:4,infomean,pch=4)
+```
+
+b.  Assuming independence, execute diagnostic checks for normality and
+    equality of variances.
+
+```{r}
+infomeancen<-info$dep-infomean[as.numeric(info$site)]
+qqnorm(infomeancen)
+#The chart provides enought information to accept the normality of the data
+
+info.sds<-tapply(info$dep,info$site,sd)
+max(info.sds)/min(info.sds)
+#to check the equality of variances we used the rule of thumb. as it is <2. We 
+#accept it
+
+```
+
+c.  Perform and conclude a one-way ANOVA test for evidence of a
+    difference between the means.
+
+```{r}
+infoaov<-aov(dep~site,info)
+summary(infoaov)
+#the p value is very small we have strong evidence to reject H0
+
+dev.off()
+```
+
+In Section 14.4, you looked at the data set providing measurements on
+petal and sepal sizes for three species of iris flowers. This is
+available in R as iris.
+
+d.  Based on diagnostic checks for normality and equality of variances,
+    decide which of the four outcome measurements (sepal length/width
+    and petal length/width) would be suitable for ANOVA (using the
+    species as the group variable).
+
+```{r}
+sl.mean<-tapply(iris$Sepal.Length,iris$Species,mean) #mean
+sl.meancen<-iris$Sepal.Length-sl.mean[as.numeric(iris$Species)] #mean centered
+sl.sd<-tapply(iris$Sepal.Length,iris$Species,sd)
+
+#checking variance
+boxplot(iris$Sepal.Length~iris$Species)
+      points(1:3,sl.mean,pch=4)
+
+max(sl.sd)/min(sl.sd)
+#the variance in Boxplot looks acceptable and the rule of thumb <2 confirms this
+
+#checking normality
+qqnorm(sl.meancen)
+#the data gathered looks normal as well. we can use this information for an ANOVA.
+#Sepal.width ----
+sw.mean<-tapply(iris$Sepal.Width,iris$Species,mean) #mean
+sw.meancen<-iris$Sepal.Width-sw.mean[as.numeric(iris$Species)] #mean centered
+sw.sd<-tapply(iris$Sepal.Width,iris$Species,sd)
+
+#checking variance
+boxplot(iris$Sepal.Width~iris$Species)
+      points(1:3,sl.mean,pch=4)
+
+max(sw.sd)/min(sw.sd)
+#the variance in Boxplot looks acceptable and the rule of thumb <2 confirms this
+
+#checking normality
+qqnorm(sw.meancen)
+qqline(sw.meancen)
+#the data gathered looks normal as well. we can use this information for an 
+#ANOVA. This distributions looks mor normal then the previous
+#Petal.Length ----
+pl.mean<-tapply(iris$Petal.Length,iris$Species,mean) #mean
+pl.meancen<-iris$Petal.Length-pl.mean[as.numeric(iris$Species)] #mean centered
+pl.sd<-tapply(iris$Petal.Length,iris$Species,sd)
+
+#checking variance
+boxplot(iris$Petal.Length~iris$Species)
+      points(1:3,sl.mean,pch=4)
+
+max(pl.sd)/min(pl.sd)
+#the variance in Boxplot does not look acceptable, and the rule of thumb is not 
+#<2. this is not a good data to proceed with ANOVA.
+
+#checking normality
+qqnorm(pl.meancen)
+qqline(pl.meancen)
+#the data gathered looks normal as well. we can use this information for an 
+#ANOVA. This distributions looks mor normal then the previous
+#Petal.width----
+pw.mean<-tapply(iris$Petal.Width,iris$Species,mean) #mean
+pw.meancen<-iris$Petal.Width-pw.mean[as.numeric(iris$Species)] #mean centered
+pw.sd<-tapply(iris$Petal.Width,iris$Species,sd)
+
+#checking variance
+boxplot(iris$Petal.Width~iris$Species)
+      points(1:3,sl.mean,pch=4)
+
+max(pw.sd)/min(pw.sd)
+#the variance in Boxplot does not look acceptable
+#and the rule of thumb >2 confirms this
+
+#checking normality
+qqnorm(pw.meancen)
+qqline(pw.meancen)
+#the data gathered looks normal as well. we can use this information for an 
+#ANOVA. This distributions looks mor normal then the previous
+#the best way to use a ANOVA is with the Sepal analysis
+```
+
+e.  Carry out one-way ANOVA for any suitable measurement variables.
+
+```{r}
+sl.aov<-aov(Sepal.Length~Species,iris)
+summary(sl.aov)
+#The pvalue is much less than the F value. We reject H0. 
+
+sw.aov<-aov(Sepal.Width~Species,iris)
+summary(sl.aov)
+#The pvalue is much less than the F value. We reject H0. 
+```
+
+Exercise 19.2 Bring up the quakes data frame again, which describes the
+locations, magnitudes, depths, and number of observation stations that
+detected 1,000 seismic events off the coast of Fiji. a. Use cut (see
+Section 4.3.3) to create a new factor vector defining the depths of each
+event according to the following three categories: (0;200], (200;400],
+and (400;680].
+
+```{r}
+depth.fac <- cut(quakes$depth,breaks=c(0,200,400,680))
+table(depth.fac)
+```
+
+b.  Decide whether a one-way ANOVA or a Kruskal-Wallis test is more
+    appropriate to use to compare the distributions of the number of
+    detecting stations, split according to the three categories in (a).
+
+```{r}
+m <- tapply(quakes$stations,depth.fac,mean)
+mc <- quakes$stations-m[as.numeric(depth.fac)]
+hist(mc)
+qqnorm(mc)
+qqline(mc) # Data appear non-normal... Kruskal-Wallis preferred over 
+# parametric one-way ANOVA
+```
+
+c.  Perform your choice of test in (b) (assume a  = 0:01 level of
+    significance) and conclude.
+
+```{r}
+kruskal.test(quakes$stations~depth.fac) # P-value > 0.01 (just barely); 
+#retain null. Minimal evidence, at best, of a difference in median 
+#number of detecting stations according to depth.fac categories.
+```
+
+Load the MASS package with a call to library("MASS") if you haven't
+already done so in the current R session. This package includes the
+ready-to-use Cars93 data frame, which contains detailed data on 93 cars
+for sale in the United States in 1993 (Lock, 1993; Venables and Ripley,
+2002). d. Use aggregate to compute the mean length of the 93 cars, split
+by two categorical variables: AirBags (type of airbags
+available---levels are Driver & Passenger, Driver only, and None), and
+Man.trans.avail (whether the car comes in a manual transmission---levels
+are Yes and No).
+
+```{r}
+library("MASS")
+cars.means <- aggregate(Cars93$Length,
+                        by=list(Cars93$AirBags,
+                                Cars93$Man.trans.avail),
+                        FUN=mean)
+cars.means
+```
+
+e.  Produce an interaction plot using the results in (d). Does there
+    appear to be an interactive effect of AirBags with Man.trans.avail
+    on the mean length of these cars (if you consider only these
+    variables)?
+
+```{r}
+interaction.plot(x.factor=cars.means[,1],
+                 trace.factor=cars.means[,2],
+                 respons=cars.means$x,
+                 trace.label="Manual avail.",
+                 xlab="Airbags",
+                 ylab="Mean length") 
+# There is some visual indication of interactive behavior owing to the 
+#non-parallel nature of the two lines; but rememeber there are no 
+#measures of variability of the various group means displayed on this 
+#plot...
+```
+
+f.  Fit a full two-way ANOVA model for the mean lengths according to the
+    two grouping variables (assume satisfaction of all relevant
+    assumptions). Is the interactive effect statistically significant?
+    Is there evidence of any main effects?
+
+```{r}
+summary(aov(Length~AirBags+Man.trans.avail+AirBags:Man.trans.avail,data=Cars93)) # No formal statistical evidence of an interactive effect. Strong evidence of main effects, however -- both 'Airbags' and 'Man.trans.avail' appear to be related to car length.
+
+```
+
+Exercise 20.1 Continue to use the survey data frame from the package
+MASS for the next few exercises. a. Using your fitted model of student
+height on writing handspan, survfit, provide point estimates and 99
+percent confidence intervals for the mean student height for handspans
+of 12, 15:2, 17, and 19:9 cm.
+
+```{r}
+library("MASS")
+survfit <- lm(Height~Wr.Hnd,data=survey)
+#(a)
+predict(survfit,newdata=data.frame(Wr.Hnd=c(12,15.2,17,19.9)),interval="confidence",level=0.99)
+```
+
+b.  In Section 20.1, you defined the object incomplete.obs, a numeric
+    vector that provides the records of survey that were automatically
+    removed from consideration when estimating the model parameters.
+    Now, use the incomplete.obs vector along with survey and Equation
+    (20.3) to calculate ˆ 0 and ˆ 1 in R. (Remember the functions
+    mean, sd, and cor. Ensure your answers match the output from
+    survfit.)
+
+```{r}
+incomplete.obs <- which(is.na(survey$Height)|is.na(survey$Wr.Hnd))
+rho.xy <- cor(survey$Wr.Hnd,survey$Height,use="complete.obs")
+b1 <- sd(survey$Height[-incomplete.obs])/sd(survey$Wr.Hnd[-incomplete.obs])*rho.xy
+b1
+b0 <- mean(survey$Height[-incomplete.obs])-b1*mean(survey$Wr.Hnd[-incomplete.obs])
+b0
+```
+
+c.  The survey data frame has a number of other variables present aside
+    from Height and Wr.Hnd. For this exercise, the end aim is to fit a
+    simple linear model to predict the mean student height, but this
+    time from their pulse rate, given in Pulse (continue to assume the
+    conditions listed in Section 20.2 are satisfied).
+
+d.  Fit the regression model and produce a scatterplot with the fitted
+    line superimposed upon the data. Make sure you can write down the
+    fitted model equation and keep the plot open.
+
+```{r}
+plot(survey$Height~survey$Pulse,xlab="Pulse rate (bpm)",ylab="Height (cm)")
+survfit <- lm(Height~Pulse,data=survey)
+survfit # Model equation is  y = 177.86 - 0.072x
+abline(survfit,lwd=2)
+```
+
+ii. Identify and interpret the point estimate of the slope, as well as
+    the outcome of the test associated with the hypotheses H0 : 1 = 0;
+    HA : 1 , 0. Also find a 90 percent CI for the slope parameter.
+
+```{r}
+summary(survfit) # For each additional bpm, the mean student height is estimated to decrease by 0.072cm; p-value for slope is 0.275. No evidence to reject H0. Insufficient evidence to conclude that pulse rate affects mean student height.
+confint(survfit,level=0.9)
+```
+
+iii. Using your model, add lines for 90 percent confidence and
+     prediction interval bands on the plot from (i) and add a legend to
+     differentiate between the lines.
+
+```{r}
+xseq <- data.frame(Pulse=seq(30,110,length=100))
+survfit.ci <- predict(survfit,newdata=xseq,interval="confidence",level=0.9)
+survfit.pi <- predict(survfit,newdata=xseq,interval="prediction",level=0.9)
+
+plot(survey$Height~survey$Pulse,xlab="Pulse rate (bpm)",ylab="Height (cm)")
+abline(survfit,lwd=2)
+lines(xseq[,1],survfit.ci[,2],lty=2)
+lines(xseq[,1],survfit.ci[,3],lty=2)
+lines(xseq[,1],survfit.pi[,2],lty=2,col="grey")
+lines(xseq[,1],survfit.pi[,3],lty=2,col="grey")
+legend("topleft",legend=c("90% CI","90% PI"),lty=2,col=c("black","grey"))
+```
+
+iv. Create an incomplete.obs vector for the current "height on pulse"
+    data. Use that vector to calculate the sample mean of the height
+    observations that were used for the model fitted in (i). Then add a
+    perfectly horizontal line to the plot at this mean (use color or
+    line type options to avoid confusion with the other lines present).
+    What do you notice? Does the plot support your conclusions from
+    (ii)?
+
+```{r}
+incomplete.obs <- which(is.na(survey$Height)|is.na(survey$Pulse))
+#abline(h=mean(survey$Height[-incomplete.obs]),col=2,lty=3,lwd=3) # The line sits in the middle of the CI bands without breaching them. This supports the conclusion that pulse rate is not significantly related to mean student height.
+
+```
+
+Next, examine the help file for the mtcars data set, which you first saw
+in Exercise 13.4 on page 287. For this exercise, the goal is to model
+fuel efficiency, measured in miles per gallon (MPG), in terms of the
+overall weight of the vehicle (in thousands of pounds). d. Plot the
+data---mpg on the y-axis and wt on the x-axis.
+
+```{r}
+?mtcars
+plot(mtcars$mpg~mtcars$wt,xlab="Weight (lbs/1000)",ylab="MPG")
+```
+
+e.  Fit the simple linear regression model. Add the fitted line to the
+    plot from (d).
+
+```{r}
+carfit <- lm(mpg~wt,data=mtcars)
+carfit
+attach(mtcars)
+plot(wt,mpg)
+abline(carfit,lwd=2)
+```
+
+f.  Write down the regression equation and interpret the point estimate
+    of the slope. Is the effect of wt on mean mpg estimated to be
+    statistically significant?
+
+```{r}
+summary(carfit) # mean MPG = 37.28 - 5.34*weight # For each extra 1000lbs of weight, the mean MPG decreases by 5.34; p-value for slope is very small---result is statistically significant---strong evidence to suggest that mean MPG changes according to weight (for cars of this era).
+
+```
+
+g.  Produce a point estimate and associated 95 percent PI for a car that
+    weighs 6;000 lbs. Do you trust the model to predict observations
+    accurately for this value of the explanatory variable? Why or why
+    not?
+
+```{r}
+predict(carfit,newdata=data.frame(wt=6),interval="prediction",level=0.95) # Predicting at 6000lbs seems untrustworthy. Extrapolation is far enough outside the range of the observed data such that the associated PI has a lower limit that is negative, which makes no sense in terms of the response variable of MPG.
+
+```
+
+Exercise 20.2 Continue using the survey data frame from the package MASS
+for the next few exercises. a. The survey data set has a variable named
+Exer, a factor with k = 3 levels describing the amount of physical
+exercise time each student gets: none, some, or frequent. Obtain a count
+of the number of students in each category and produce side-by-side
+boxplots of student height split by exercise.
+
+```{r}
+library("MASS")
+#(a)
+table(survey$Exer)
+boxplot(survey$Height~survey$Exer)
+```
+
+b.  Assuming independence of the observations and normality as usual,
+    fit a linear regression model with height as the response variable
+    and exercise as the explanatory variable (dummy coding). What's the
+    default reference level of the predictor? Produce a model summary.
+
+```{r}
+survfit <- lm(Height~Exer,data=survey)
+summary(survfit) # The reference level of the predictor defaults to 
+#the first level of the factor, which in this case (as is the default in R) is 
+#alphabetically arranged to be 'Freq'.
+
+```
+
+c.  Draw a conclusion based on the fitted model from (b)---does it
+    appear that exercise frequency has any impact on mean height? What
+    is the nature of the estimated effect?
+
+**\*\* We observe that both of the levels for which we've obtained
+coefficient estimates yield p-values that suggest evidence the
+coefficients are different to zero. The coefficient corresponding to
+'some' has the smallest p-value of the two additive dummy levels. The
+negative point estimates of both estimates tell us that the model
+predicts the effect on height of being in either the 'none' or the
+'some' categories, when compared to the 'frequent' category, is one of a
+decrease. In other words, it appears those who exercise less than
+'frequent' are shorter on average. The shortest mean height is reserved
+for those in the 'none' exercise category; the estimated coefficient
+(-5.58) is more extreme than the coefficient for some' (-4.21). Overall
+statistical significance of the predictor (in terms of the effect of
+exercise on height) is supported by the global (omnibus F-test) P-value
+of 0.0035.\*\***
+
+d.  Predict the mean heights of one individual in each of the three
+    exercise categories, accompanied by 95 percent prediction intervals.
+```{r}
+one.of.each <- factor(levels(survey$Exer))
+one.of.each
+predict(survfit,newdata=data.frame(Exer=one.of.each),interval="prediction")
+
+```
+
+e.  Do you arrive at the same result and interpretation for the
+    height-by-exercise model if you construct an ANOVA table using aov?
+
+```{r}
+summary(aov(Height~Exer,data=survey)) # Same 'global' P-value as the lm model 
+#summary. There is evidence to suggest mean student height differs according to 
+#exercise frequency.
+```
+
+
+f.  Is there any change to the outcome of (e) if you alter the model so
+    that the reference level of the exercise variable is "none"? Would
+    you expect there to be? Now, turn back to the ready-to-use mtcars
+    data set. One of the variables in this data frame is qsec, described
+    as the time in seconds it takes to race a quarter mile; another is
+    gear, the number of forward gears (cars in this data set have either
+    3, 4, or 5 gears).
+```{r}
+ExerReordered <- relevel(survey$Exer,ref="None")
+levels(ExerReordered)
+summary(aov(Height~ExerReordered,data=survey)) 
+# There is no change to the omnibus F-test if we reorder the the reference level
+#of exercise to be 'none', and nor should we expect there to be. The global test
+#of a difference between the means doesn't depend on what we set the baseline 
+#value of the response to be.
+
+```
+    
+
+g.  Using the vectors straight from the data frame, fit a simple linear
+    regression model with qsec as the response variable and gear as the
+    explanatory variable and interpret the model summary.
+```{r}
+carfit <- lm(qsec~gear,data=mtcars)
+summary(carfit) # The effect of 'gear' when treated as a continuous variable is 
+#interpreted as a decrease in quarter-mile time of around 0.5 seconds, on 
+#average, for each additional forward gear. However, there is no evidence that 
+#this effect is different to zero, with a high P-value of 0.243 (and a similar 
+#global p-value)
+```
+
+h.  Explicitly convert gear to a factor vector and refit the model.
+    Compare the model summary with that from (g). What do you find?
+```{r}
+#(h)
+carfit2 <- lm(qsec~factor(gear),data=mtcars)
+summary(carfit2) # The effect of 'gear' when treated as a categorical variable 
+#now appears to be statistically significant. Having 4 gears (as opposed to the 
+#reference level of 3) seems to increase the mean quarter-mile time by 1.27 
+#seconds, having 5 gears appears to decrease the mean quarter-mile time by 2.05 
+#seconds. The global (omnibus F-test) p-value is also quite small, yielding 
+#evidence in support of an effect of 'gear' on 'qsec'.
+```
+
+i.  Explain, with the aid of a relevant plot in the same style as the
+    right image of Figure 20-6, why you think there is a difference
+    between the two models (g) and (h).
+```{r}
+plot(mtcars$qsec~mtcars$gear,xlab="No. of Gears",ylab="Quarter-mile Time")
+abline(carfit,lwd=2) # The plot indicates clearly that the difference between 
+#the two models is due to the fact that the relationship cannot be well 
+#explained by a continuous straight line. The first model therefore is incapable
+#of realistically capturing the effect of changing categories in 'gear' on 
+#'qsec'.
+```
+
+
+
+
+
+# chapter 21 :MULTIPLE LINEAR REGRESSION
+
+
+

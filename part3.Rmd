@@ -8,85 +8,64 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
+library(tidyverse)
+library(GGally)
 ```
 
-chapter 13
-excersise 13.1
+chapter 13 excersise 13.1
 
+a.  For each of the following, identify the type of variable described: numeric-continuous, numeric-discrete, categorical-nominal, or categorical-ordinal:
 
+<!-- -->
 
-a. For each of the following, identify the type of variable described:
-numeric-continuous, numeric-discrete, categorical-nominal, or
-categorical-ordinal: 
-
-i) The number of blemishes on the hood of a car coming off a
-production line 
-
+i)  The number of blemishes on the hood of a car coming off a production line
 
 > numeric-discrete
 
-ii. A survey question that asks the participant to select from
-Strongly agree, Agree, Neutral, Disagree, and Strongly
-disagree 
+ii. A survey question that asks the participant to select from Strongly agree, Agree, Neutral, Disagree, and Strongly disagree
 
 > categorical-orginal
 
-iii. The noise level (in decibels) at a concert 
+iii. The noise level (in decibels) at a concert
 
 > numeric- continuous
 
-iv. The noise level out of three possible choices: high,
-medium, low 
+iv. The noise level out of three possible choices: high, medium, low
 
 > categorical-orginal
 
-v. A choice of primary color 
+v.  A choice of primary color
 
 > categorical-nominal
 
-vi. The distance between a cat and a mouse 
+vi. The distance between a cat and a mouse
 
 > numeric -continious
 
-b. For each of the following, identify whether the quantity discussed
-is a population parameter or a sample statistic. If the latter, also
-identify what the corresponding population parameter is.
-i. The percentage of 50 New Zealanders who own a gaming
-console 
+b.  For each of the following, identify whether the quantity discussed is a population parameter or a sample statistic. If the latter, also identify what the corresponding population parameter is.
+c.  The percentage of 50 New Zealanders who own a gaming console
 
 > sample statistic
 
-ii. The average number of blemishes found on the hoods of
-three cars in the No Dodgy Carz yard 
+ii. The average number of blemishes found on the hoods of three cars in the No Dodgy Carz yard
 
 > sample statistic
 
-iii. The proportion of domestic cats in the United States that
-wear a collar 
+iii. The proportion of domestic cats in the United States that wear a collar
 
 > population-parameter
 
-iv. The average number of times per day a vending machine is
-used in a year 
+iv. The average number of times per day a vending machine is used in a year
 
 > population-parameter
 
-v. The average number of times per day a vending machine is
-used in a year, based on data collected on three distinct days
-in that year 
+v.  The average number of times per day a vending machine is used in a year, based on data collected on three distinct days in that year
 
 > sample statistics
 
-
-
-
-
-
 Exercise 13.2
 
-
-a. Obtain, rounded to two decimal places, the proportion of seismic events in the quakes data frame that occurred at a depth of 300 km or deeper.
-
+a.  Obtain, rounded to two decimal places, the proportion of seismic events in the quakes data frame that occurred at a depth of 300 km or deeper.
 
 ```{r}
 data1<- quakes %>% filter(depth >= 300)
@@ -94,10 +73,8 @@ round(mean(data1$depth),2)
 
 
 ```
-b. Remaining with the quakes data set, calculate the mean and
-median magnitudes of the events that occurred at a depth of
-300 km or deeper.
 
+b.  Remaining with the quakes data set, calculate the mean and median magnitudes of the events that occurred at a depth of 300 km or deeper.
 
 ```{r}
 mean(data1$mag)
@@ -105,13 +82,7 @@ median(data1$mag)
 
 ```
 
-c. Using the chickwts data set, write a for loop that gives you the
-mean weight of chicks for each feed type—the same as the results
-given by the tapply function in Section 13.2.1. Display the results
-rounded to one decimal place and, when printing, ensure each
-mean is labeled with the appropriate feed type.
-
-
+c.  Using the chickwts data set, write a for loop that gives you the mean weight of chicks for each feed type---the same as the results given by the tapply function in Section 13.2.1. Display the results rounded to one decimal place and, when printing, ensure each mean is labeled with the appropriate feed type.
 
 ```{r}
 for (i in levels(chickwts$feed)) {
@@ -120,21 +91,11 @@ for (i in levels(chickwts$feed)) {
 }
 ```
 
-Another ready-to-use data set (in the automatically loaded datasets
-package) is InsectSprays. It contains data on the number of insects
-found on various agricultural units, as well as the type of insect spray
-that was used on each unit. Ensure you can access the data frame at
-the prompt; then study the help file ?InsectSprays to get an idea of R’s
-representation of the two variables.
-d. Identify the two variable types in InsectSprays 
+Another ready-to-use data set (in the automatically loaded datasets package) is InsectSprays. It contains data on the number of insects found on various agricultural units, as well as the type of insect spray that was used on each unit. Ensure you can access the data frame at the prompt; then study the help file ?InsectSprays to get an idea of R's representation of the two variables. d. Identify the two variable types in InsectSprays
 
+> Variables: count is numerical-discrete, spray is categorical-nominal
 
-
-> Variables: count is numerical-discrete, spray is categorical-nominal 
-
-
-e. Calculate the modes of the distribution of insect counts, regardless of spray type.
-
+e.  Calculate the modes of the distribution of insect counts, regardless of spray type.
 
 ```{r}
 insecttable<-table(InsectSprays$count)
@@ -143,20 +104,15 @@ insecttable[insecttable==max(insecttable)]
 
 ```
 
-
-f. Use tapply to report the total insect counts by each spray type
-
-
+f.  Use tapply to report the total insect counts by each spray type
 
 ```{r}
 tapply(InsectSprays$count, InsectSprays$spray, sum)
 
 
 ```
-g. Using the same kind of for loop as in (c), compute the percentage of agricultural units in each spray type group that had at least five bugs on them. When printing to the screen, round the
-percentages to the nearest whole number.
 
-
+g.  Using the same kind of for loop as in (c), compute the percentage of agricultural units in each spray type group that had at least five bugs on them. When printing to the screen, round the percentages to the nearest whole number.
 
 ```{r}
 
@@ -167,9 +123,7 @@ for (i in levels(InsectSprays$spray)) {
 }
 ```
 
-
-
-h. Obtain the same numeric results as in (g), with rounding, but use tapply and a disposable function.
+h.  Obtain the same numeric results as in (g), with rounding, but use tapply and a disposable function.
 
 ```{r}
 tapply(InsectSprays$count, 
@@ -177,20 +131,9 @@ tapply(InsectSprays$count,
        function(x){round(mean(x>=5)*100,2)})
 ```
 
-
-
-
-
-
-
 Exercise 13.3
 
-
-a. Using the chickwts data frame, compute the 10th, 30th, and
-90th percentiles of all the chick weights and then use tapply to
-determine which feed type is associated with the highest sample
-variance of weights.
-
+a.  Using the chickwts data frame, compute the 10th, 30th, and 90th percentiles of all the chick weights and then use tapply to determine which feed type is associated with the highest sample variance of weights.
 
 ```{r}
 quantile(chickwts$weight,c(0.1,0.3,0.9))
@@ -199,22 +142,14 @@ chicksvar<-tapply(chickwts$weight,chickwts$feed,var)
 chicksvar[chicksvar==max(chicksvar)]
 ```
 
-
-
-b. Turn to the seismic event data in quakes and complete the following tasks:
-i. Find the IQR of the recorded depths.
-
+b.  Turn to the seismic event data in quakes and complete the following tasks:
+c.  Find the IQR of the recorded depths.
 
 ```{r}
 IQR(quakes$depth)
 ```
 
-ii. Find the five-number summary of all magnitudes of seismic
-events that occur at a depth of 400 km or deeper. Compare
-this to the summary values found in Section 13.2.3 of those
-events occurring at less than 400 km and briefly comment
-on what you notice.
-
+ii. Find the five-number summary of all magnitudes of seismic events that occur at a depth of 400 km or deeper. Compare this to the summary values found in Section 13.2.3 of those events occurring at less than 400 km and briefly comment on what you notice.
 
 ```{r}
 summary(quakes$mag[quakes$depth<=400])
@@ -223,14 +158,7 @@ summary(quakes$mag[quakes$depth<=400])
 #weaker it gets
 ```
 
-
-
-
-iii. Use your knowledge of cut (Section 4.3.3) to create a new
-factor vector called depthcat that identifies four evenly
-spaced categories of quakes$depth so that when you use
-levels(depthcat), it gives the following
-
+iii. Use your knowledge of cut (Section 4.3.3) to create a new factor vector called depthcat that identifies four evenly spaced categories of quakes\$depth so that when you use levels(depthcat), it gives the following
 
 ```{r}
 depthcat<-cut(quakes$depth,
@@ -239,26 +167,1173 @@ depthcat<-cut(quakes$depth,
               include.lowest = T)
 ```
 
-
-
-iv. Find the sample mean and standard deviation of the magnitudes of the events associated with each category of depth
-according to depthcat
-
+iv. Find the sample mean and standard deviation of the magnitudes of the events associated with each category of depth according to depthcat
 
 ```{r}
 tapply(quakes$mag,depthcat,mean)
 tapply(quakes$mag,depthcat,sd)
 ```
 
-
-
-v. Use tapply to compute the 0.8th quantile of the magnitudes
-of the seismic events in quakes, split by depthcat.
-
-
+v.  Use tapply to compute the 0.8th quantile of the magnitudes of the seismic events in quakes, split by depthcat.
 
 ```{r}
 tapply(quakes$mag,depthcat,quantile,prob=0.8)
 ```
 
+Exercise 13.4
+
+a.  In Exercise 7.1 (b) on page 139, you plotted height against weight measurements. Compute the correlation coefficient based on the observed data of these two variables.
+
+```{r}
+
+
+weight<-c(55,85,75,42,93,63,58,75,89,67)
+height<-c(161,185,174,154,188,178,170,167,181,178)
+Sex<-c("f","m","m","f","m","m","f","m","m","f")
+
+cor(weight,height)
+
+
+```
+
+b.  Another of R's built-in, ready-to-use data sets is mtcars, containing a number of descriptive details on performance aspects of 32 automobiles.
+c.  Ensure you can access this data frame by entering mtcars at the prompt. Then inspect its help file to get an idea of the types of data present.
+
+```{r}
+
+head(mtcars,n = 5)
+#?mtcars
+
+```
+
+ii. Two of the variables describe a vehicle's horsepower and shortest time taken to travel a quarter-mile distance. Using base R graphics, plot these two data vectors with horsepower on the x-axis and compute the correlation coefficient.
+
+```{r}
+library(dplyr)
+library(ggplot2)
+mtcars %>% 
+  ggplot() +
+  aes(x=hp,y=qsec)+
+  geom_point()
+  
+
+
+
+
+```
+
+iii. Identify the variable in mtcars that corresponds to transmission type. Use your knowledge of factors in R to create a new factor from this variable called tranfac, where manual cars should be labeled "manual" and automatic cars "auto".
+
+```{r}
+tranfac<-factor(mtcars[,9],labels=c("auto","manual"))
+```
+
+iv. Now, use qplot from ggplot2 in conjunction with tranfac to produce the same scatterplot as in (ii) so that you're able to visually differentiate between manual and automatic cars.
+
+```{r}
+
+theplot<-qplot(mtcars[,4],mtcars[,7],
+               main="The Plot",
+               xlab="Horsepower",
+               ylab="1/4 mile time",
+               color=tranfac,
+               shape=tranfac)
+
+
+```
+
+v.  Finally, compute separate correlation coefficients for horsepower and quarter-mile time based on the transmission of the vehicles and, comparing these estimates with the overall value from (ii), briefly comment on what you note.
+
+```{r}
+autoflag<-mtcars[,9]==0
+manualcor<-round(cor(mtcars[,4][autoflag],mtcars[,7][autoflag]),4)
+autocor<-round(cor(mtcars[,4][!autoflag],mtcars[,7][!autoflag]),4)
+
+manualcor;autocor
+
+#Separeted by transmission, the negative correlation gets stronger
+
+
+```
+
+c.  Return to chickwts to complete the following tasks:
+d.  Produce a plot like the left panel of Figure 13-7, based on the weights of chicks on the sunflower diet only. Note that one of the sunflower-fed chicks has a far lower weight than the others.
+
+```{r}
+
+sunchicks<-chickwts$weight[chickwts$feed == "sunflower"]
+plot(
+      x = sunchicks,
+      y = rep(0, length(sunchicks)),
+      xlab = "weight",
+      xlim=c(min(sunchicks),
+             max(sunchicks)),
+      ylab = "sunflower chick weights",
+      yaxt = "n",
+      bty = "n",
+      cex.axis=1.5,
+      cex.lab=1.5)
+abline(h=0,lty=2)
+
+
+```
+
+ii. Compute the standard deviation and IQR of the weights of the sunflower-fed chicks.
+
+```{r}
+
+sd(sunchicks)
+
+
+IQR(sunchicks)
+
+
+
+```
+
+iii. Now, suppose you're told that the lowest weight of the sunflower-fed chicks was caused by a certain illness, irrelevant to your research. Delete this observation and recalculate the standard deviation and IQR of the remaining sunflower chicks. Briefly comment on the difference in calculated values.
+
+```{r}
+
+sunchicks2<-sunchicks[-6]
+
+plot(
+      x = sunchicks2,
+      y = rep(0, length(sunchicks2)),
+      xlab = "weight",
+      xlim=c(min(sunchicks2),
+             max(sunchicks2)),
+      ylab = "",
+      yaxt = "n",
+      bty = "n",
+      cex.axis=1.5,
+      cex.lab=1.5)
+abline(h=0,lty=2)
+
+sd(sunchicks2)
+
+
+IQR(sunchicks2)
+
+
+
+```
+
+chapter 14
+
+Exercise 14.1
+
+Recall the built-in InsectSprays data frame, containing counts of insects on various agricultural units treated with one of six sprays. a. Produce a histogram of the counts of insects using base R graphics.
+
+```{r}
+
+hist(InsectSprays$count,xlab = "Count",right=T)
+
+
+```
+
+b.  Obtain the total number of insects found according to each spray (this was also asked in Exercise 13.2 (f) on page 273). Then, use base R graphics to produce a vertical barplot and a pie chart of these totals, labeling each plot appropriately.
+
+```{r}
+sumofinsects<-tapply(InsectSprays$count,InsectSprays$spray,sum)
+
+barplot(sumofinsects,
+        names.arg = levels(InsectSprays$spray),
+        xlab="Spray",
+        ylab = "Total of insects")
+pie(sumofinsects,
+    labels = levels(InsectSprays$spray),
+    main = "Total of mosquitoes per spray")
+
+
+```
+
+c.  Use ggplot2 functionality to generate side-by-side boxplots of the counts of insects according to each spray type and include appropriate axis labels and a title.
+
+```{r}
+sort.fac <- factor(InsectSprays$spray)
+
+ggplot(InsectSprays) +
+ aes(x = spray, y = count) +
+ geom_boxplot(fill = "#0c4c8a") +
+ theme_minimal()
+
+```
+
+Yet another of R's useful ready-to-use data sets is USArrests, containing data on the number of arrests for murder, rape, and assault per 100,000 individuals in each of the 50 states of the United States, recorded in 1973 (see, for example, McNeil, 1977). It also includes a variable giving the percentage of urban-based population in each state. Briefly inspect the data frame object and the accompanying documentation ?USArrests. Then complete the following:
+
+\<\n\>
+
+d.  Use ggplot2 functionality to generate a right-exclusive histogram of the proportion of urban population for the states. Set your breaks to be 10 units each, between 0 and 100. Have the histogram show the first quartile, the median, and the third quartile; then provide a matching legend. Use colors as you like and include appropriate axis annotation.
+
+```{r}
+
+qplot(USArrests$UrbanPop,
+      geom = "blank",
+      main="Urban Population",
+      xlab="Urban Population")+
+      geom_histogram(color="black",
+                     fill="blue",
+                     breaks=seq(0,100,10),
+                     closed="right")+
+      geom_vline(mapping=aes(xintercept=c(quantile(USArrests$UrbanPop,0.25),
+                                          quantile(USArrests$UrbanPop,0.50),
+                                          quantile(USArrests$UrbanPop,0.75))),
+                 show.legend = T)+
+      scale_linetype_manual(values=c(2,3))+
+      labs(linetype="")
+
+
+
+```
+
+e.  The code t(as.matrix(USArrests[,-3])) creates a matrix of the USArrests data without the urban population column, and the built-in R object state.abb provides the two-letter state abbreviations, in alphabetical order, as a character vector. Use these two structures and base R graphics to produce a horizontal, stacked barplot with the horizontal bars labeled with state abbreviations and with each bar split according to the type of crime (murder, rape, and assault). Include a legend.
+
+```{r}
+crimesperstate<-t(as.matrix(USArrests[,-3]))
+
+barplot(crimesperstate,
+        names.arg = state.abb,
+        main="Types of crimes per state",
+        legend.text = rownames(crimesperstate))
+```
+
+f.  Define a new factor vector urbancat that is set to 1 if the corresponding state has an urban population percentage greater than the median percentage and is set to 0 otherwise.
+
+```{r}
+urbancat <- rep(NA, length(USArrests$UrbanPop))
+urbanmedian <- median(USArrests$UrbanPop)
+for (i in 1:length(USArrests$UrbanPop)) {
+      if (USArrests$UrbanPop[i] > urbanmedian) {
+            urbancat[i] <- 1
+      } else{
+            urbancat[i] <- 0
+      }
+}
+urbancat <- factor(urbancat)
+
+
+
+```
+
+g.  Create a new copy of USArrests in your workspace, after deleting the UrbanPop column, leaving just the three crime rate variables. Then insert a new, fourth column in this object with urbancat.
+
+```{r}
+
+myusarrests <- USArrests[-3]
+myusarrests$urbancat <- urbancat
+
+
+```
+
+h.  Use the data frame from (g) to produce a scatterplot matrix and other associated plots of the three crime rates against one another via GGally functionality. Use color to split the crime rates according to the two levels of urbancat.
+
+```{r}
+
+
+
+ggpairs(myusarrests,
+        mapping = aes(col = urbancat),
+        axisLabels = "internal")
+
+
+
+```
+
+Return to the built-in quakes data set. i. Create a factor vector corresponding to the magnitudes. Each entry should assume one of three categories based on breaks marked by the minimum magnitude, the 1/3 th quantile, the 2/3 th quantile, and the maximum magnitude.
+
+```{r}
+qquantiles<-quantile(quakes$mag,c(1/3,2/3))
+
+magvec<-cut(quakes$mag,
+            breaks=c(min(quakes$mag),
+                     qquantiles[1],
+                     qquantiles[2],
+                     max(quakes$mag)))
+```
+
+j.  Re-create the plot shown next, where low-, medium-, and highmagnitude events, according to your factor vector from
+
+```{r}
+plot(
+      quakes$long,
+      quakes$lat,
+      pch = (1:3)[magvec],
+      col = (1:3)[magvec],
+      main = "Latitude and longitude",
+      ylab = "Latitude",
+      xlab = "Longitude"
+)
+
+```
+
+k.  Add a legend to the plot from (j) to reference the three pch values.
+
+```{r}
+plot(
+      quakes$long,
+      quakes$lat,
+      pch = (1:3)[magvec],
+      col = (1:3)[magvec],
+      main = "Latitude and longitude",
+      ylab = "Latitude",
+      xlab = "Longitude"
+);legend(
+      "bottomleft",
+      legend = c("0<x<1/3", "1/3<x<2/3", "2/3<x<1"),
+      col = 1:3,
+      pch = 1:3,
+      title="magnitude quantiles"
+)
+
+```
+
+chapter 15
+
+Exercise 15.1
+
+You have a standard deck of 52 playing cards. There are two colors (black and red) and four suits (spades are black, clubs are black, hearts are red, and diamonds are red). Each suit has 13 cards, in which there is an ace, numbered cards from 2 to 10, and three face cards (jack, queen, and king).
+
+a.  You randomly draw and then replace a card. What's the probability it's an ace? What's the probability it's the 4 of spades?
+
+```{r}
+(4/52)
+1/52
+```
+
+b.  You randomly draw a card, and after replacing it, you draw another. Let A be the event that the card is a club; let B be the event that the card is red. What is Pr(AjB)? That is, what is the probability the second card is a club, given the first one was a red card? Are the two events independent?
+
+```{r}
+
+
+a<-1/4
+b<-1/2
+#the probability is 1/4. the events are independent
+
+```
+
+c.  Repeat (b), this time assuming that when the first (club) card is drawn, it is not replaced. Would this change your answer to (b) in terms of independence?
+
+```{r}
+
+
+
+
+#a is 1/4
+#pr(a|b) is 13/51
+#the event has now a lesser chance of happening. The events are dependend.
+
+```
+
+d.  Let C be the event a card is a face card, and let D be the event a card is black. You draw a single card. Evaluate Pr(C  D). Are the two events mutually exclusive?
+
+```{r}
+
+
+c <- (4*3)/52
+d <- 1/2 
+#pr is
+c*d
+
+#they are not mutually exclusive as the result is positive.
+```
+
+Exercise 15.2
+
+a.  For each of the following definitions, identify whether it's best described as a random variable or as a realization of a random variable. Furthermore, identify whether each statement describes a continuous or a discrete quantity.
+
+b.  The number of coffees x made by your local shop on June 3, 2016
+
+> realization of a random variable. - Discrete quantity
+
+ii. The number of coffees X made by your local shop on any given day
+
+> Random variable - DIscrete quantity
+
+iii. Y, whether or not it rains tomorrow
+
+> Random Variable - discrete quantity
+
+iv. Z, the amount of rain that falls tomorrow
+
+> random variable - continuous quantity
+
+v.  How many crumbs k on your desk right now
+
+> realization - Discrete quantity
+
+vi. Total collective weight W of the crumbs on your desk at any specified time
+
+> random variable - Continuous quantity
+
+b.  Suppose you construct the following table providing probabilities associated with the random variable S, the total stars given to any movie in a particular genre by a certain critic:
+
++---------+-----------+-----------+-----------+-----------+-----------+
+| s       | 1         | 2         | 3         | 4         | 5         |
++=========+===========+===========+===========+===========+===========+
+| Pr(S=s) | 0.10      | 0.13      |0.21       |       ??? |    0.15   |
++---------+-----------+-----------+-----------+-----------+-----------+
+
+
+
+
+
+
+i. Assuming this table describes the complete set of outcomes,
+evaluate the missing probability Pr(S = 4).
+
+
+
+
+```{r}
+b.outcomes <-c(1,2,3,4,5)
+b.prob<-c(0.1,0.13,0.21,0.41,0.15)
+
+#i
+x<-1-.1-.13-.21-.15
+# x is 0.41
+```
+
+
+ii. Obtain the cumulative probabilities.  
+```{r}
+b.probsum<- cumsum(b.prob)
+```
+
+iii. What is the mean of S, the expected number of stars this
+critic will award any given movie in this genre?
+
+```{r}
+b.mean<-sum(b.outcomes*b.prob)
+```
+
+
+iv. What is the standard deviation of S?
+```{r}
+b.var<- sum(((b.outcomes-b.mean)^2)*b.prob)
+```
+
+
+v. What is the probability that any given movie in this genre will
+be given at least three stars?
+
+```{r}
+b.probatleast3<-sum(b.prob[1:3])
+```
+
+vi. Visualize, and briefly comment on the appearance of, the
+probability mass function.
+
+
+
+```{r}
+b.appearance<-barplot(b.prob,
+                      names.arg = b.outcomes,
+                      space=0,
+                      main="Appearance",
+                      xlab="Stars",
+                      ylab="Probability")
+```
+
+
+
+
+
+
+c. Return to the picnic temperature example based on the random
+variable W defined in Section 15.2.3.
+i. Write an R function to return f (w) as per Equation (15.5)
+for any numeric vector of values supplied as w. Try to avoid
+using a loop in favor of vector-oriented operations.
+
+
+
+```{r}
+functionf <- function(w) {
+      #  (w-40)/625 if 40<=w<=65
+      #  (90-w)/625 if 65<w<=90
+      #  0 if anything else
+
+      answer <- rep(0, length(w))
+      w.lower <- w >= 40 & w <= 65
+      w.upper <- w > 65 & w < 90
+
+      answer[w.lower] <- (w[w.lower] - 40) / 625
+      answer[w.upper] <- (90 - w[w.upper]) / 625
+
+      return(answer)
+}
+```
+
+
+
+
+
+
+
+ii. Write an R function to return F(w) as per Equation (15.6)
+for any numeric vector of values supplied as w. Again, try to
+avoid using a loop, either explicit or implicit.
+
+
+
+
+```{r}
+
+FunctionF <- function(w) {
+      #w<40 <- 0
+      #40<=x<=65 <- (w^2-80*w+1600)/1250
+      #65<x<=90 <- (180*w-w^2-6850)/1250
+      #else is 1
+
+      answer <- rep(0, length(w))
+      w.lower <- w >= 40 & w <= 65
+      w.upper <- w > 65 & w <= 90
+      w.uppest <- w > 90
+
+      answer[w.lower] <- (w[w.lower] ^ 2 - 80 * w[w.lower] + 1600) / 1250
+      answer[w.upper] <- (180 * w[w.upper] - w[w.upper] ^ 2 - 6850) / 1250
+      answer[w.uppest] <- 1
+
+      return(answer)
+      #test
+      #return.15.6(c(12,45,70,100))
+}
+
+
+
+```
+
+
+
+
+
+
+iii. Use your functions from (i) and (ii) to confirm the results
+from the text, in other words, that f (55:2) = 0:02432 and
+that F(55:2) = 0:184832.
+
+
+
+```{r}
+
+functionf(55.2)
+FunctionF(55.2)
+
+
+```
+
+
+
+iv. Make use of your function for F(w) to compute Pr(W > 60).
+Hint: Note that because the total area underneath f (w) is
+one, Pr(W > 60) = 1 - Pr(W <= 60).
+
+
+
+```{r}
+
+
+
+1 - FunctionF(60)
+```
+
+
+
+v. Find Pr(60:3 < W < 76:89).
+
+
+
+```{r}
+
+
+FunctionF(76.89) - FunctionF(60.3)
+
+```
+
+
+
+
+
+
+
+
+
+chapter 16
+
+
+exercise 16.1
+A forested nature reserve has 13 bird-viewing platforms scattered
+throughout a large block of land. The naturalists claim that at
+any point in time, there is a 75 percent chance of seeing birds at
+each platform. Suppose you walk through the reserve and visit
+every platform. If you assume that all relevant conditions are satisfied,
+let X be a binomial random variable representing the total
+number of platforms at which you see birds.
+
+
+
+
+```{r}
+value<-1
+platform<-13
+prob<-3/4
+```
+
+
+a. Visualize the probability mass function of the binomial distribution
+of interest.
+
+
+```{r}
+
+dbinom(x=value,size=platform,prob=prob)
+
+
+```
+
+b. What is the probability you see birds at all sites?
+
+
+
+```{r}
+
+
+
+value=13
+dbinom(x=value,size=platform,prob=prob)
+```
+
+c. What is the probability you see birds at more than 9 platforms?
+
+
+
+```{r}
+
+value=9
+1-pbinom(q=value,size=platform,prob=prob)
+
+
+```
+
+
+
+
+d. What is the probability of seeing birds at between 8 and 11
+platforms (inclusive)? Confirm your answer by using only the
+d-function and then again using only the p-function.
+
+
+
+
+```{r}
+
+sum(dbinom(x=1:3,size=platform,prob=prob))
+pbinom(q=3,size=platform,prob=prob)
+
+
+```
+
+
+
+
+
+e. Say that, before your visit, you decide that if you see birds at
+fewer than 9 sites, you’ll make a scene and demand your entry
+fee back. What’s the probability of your embarrassing yourself in
+this way?
+
+
+
+
+```{r}
+
+
+pbinom(q=8,13,3/4)
+
+```
+
+
+
+
+
+f. Simulate realizations of X that represent 10 different visits to the
+reserve; store your resulting vector as an object.
+
+
+
+
+```{r}
+
+
+xrealizations<-rbinom(10,13,3/4)
+
+
+```
+
+g. Compute the mean and standard deviation of the distribution of
+interest.
+```{r}
+mean(xrealizations)
+sd(xrealizations)
+```
+
+
+
+
+
+
+
+
+Exercise 16.2
+
+
+
+Every Saturday, at the same time, an individual stands by the side of
+a road and tallies the number of cars going by within a 120-minute
+window. Based on previous knowledge, she believes that the mean
+number of cars going by during this time is exactly 107. Let X represent
+the appropriate Poisson random variable of the number of cars
+passing her position in each Saturday session.
+
+
+
+
+a. What is the probability that more than 100 cars pass her on any
+given Saturday?
+
+
+
+```{r}
+1-ppois(100,107)
+
+
+
+```
+
+
+b. Determine the probability that no cars pass.
+```{r}
+dpois(0,107)
+```
+
+
+
+
+c. Plot the relevant Poisson mass function over the values in
+60 <= x <= 150.
+
+
+
+
+```{r}
+barplot(
+      dpois(60:150, 107),
+      main = "Number of cars distribution",
+      xlab = "x cars",
+      ylab = "Pr(X = x)",
+      names.arg = seq(60,150,1),
+      space=0
+)
+```
+
+
+
+
+
+
+d. Simulate 260 results from this distribution (about five years of
+weekly Saturday monitoring sessions). Plot the simulated results
+using hist; use xlim to set the horizontal limits from 60 to 150.
+Compare your histogram to the shape of your mass function
+from (c).
+
+
+
+```{r}
+hist(rpois(260,107),
+     xlim = c(60,150))
+```
+
+
+
+
+
+
+
+
+
+Exercise 16.3
+
+
+You visit a national park and are informed that the height of a certain
+species of tree found in the forest is uniformly distributed between 3
+and 70 feet.
+
+
+a. What is the probability you encounter a tree shorter than
+5.5 feet?
+
+
+
+```{r}
+a<-3
+b<-70
+
+punif(5.5, min=a,max=b)
+```
+
+
+
+
+b. For this probability density function, what is the height that
+marks the cutoff point of the tallest 15 percent of trees?
+
+
+
+```{r}
+qunif((1-0.15),min=a,max=b)
+
+
+
+```
+
+
+
+
+c. Evaluate the mean and standard deviation of the tree height
+distribution.
+
+
+
+
+```{r}
+mean<- (a+b)/2
+sd<- sqrt(((b-a)^2)/12) 
+
+
+
+```
+
+
+
+
+d. Using (c), confirm that the chance that you encounter a tree
+with a height that is within half a standard deviation (that is,
+below or above) of the mean height is roughly 28.9 percent.
+
+
+
+
+```{r}
+
+mark1<-mean-sd/2
+mark2<-mean+sd/2
+sum(punif(mark2,a,b)-punif(mark1,a,b))
+
+
+```
+
+
+
+
+
+
+e. At what height is the density function itself? Show it in a plot.
+
+
+```{r}
+
+barplot(dunif(3:70,min=a,max=b),
+        space=0)
+max(dunif(3:70,min=a,max=b))
+
+
+
+```
+
+
+
+f. Simulate 10 observed tree heights. Based on these data, use
+quantile (refer to Section 13.2.3) to estimate the answer you
+arrived at in (b). Repeat your simulation, this time generating
+1,000 variates, and estimate (b) again. Do this a handful of
+times, taking a mental note of your two estimates each time.
+Overall, what do you notice of your two estimates (one based on
+10 variates at a time and the other based on 1,000) with respect
+to the “true” value in (b)?
+
+
+
+
+```{r}
+simulation<-runif(10,a,b)
+quantile(simulation,0.85)
+
+Simulation<-runif(1000,a,b)
+quantile(Simulation,0.85)
+#as we have more variables, the test value aproximates itself 
+#from the true value
+
+```
+
+
+
+
+Exercise 16.4
+
+
+a. A tutor knows that the length of time taken to complete a certain
+statistics question by first-year undergraduate students, X, is
+normally distributed with a mean of 17 minutes and a standard
+deviation of 4.5 minutes.
+
+
+
+i. What is the probability a randomly selected undergraduate
+takes more than 20 minutes to complete the question?
+
+
+```{r}
+
+mu<-17
+sd<-4.5
+
+1-pnorm(20,mu,sd)
+
+```
+
+
+
+ii. What’s the chance that a student takes between 5 and 10
+minutes to finish the question?
+
+```{r}
+
+a<-5
+b<-10
+pnorm(b,mu,sd)-pnorm(a,mu,sd)
+
+```
+
+
+iii. Find the time that marks off the slowest 10 percent of
+students.
+
+
+```{r}
+
+qnorm(.9,mu,sd)
+
+
+```
+
+
+
+
+iv. Plot the normal distribution of interest between 4 and
+shade in the probability area of (iii), the slowest 10 percent
+of students.
+```{r}
+xval <- seq(mu - 4 * sd, mu + 4 * sd, length.out = 500)
+fx <- dnorm(xval, mu, sd)
+#plotting
+plot(
+      xval,
+      fx,
+      typ = "l",
+      ylab = "f(x)",
+      xlab = "x",
+      main = "Normal distribution of x"
+)
+abline(h=0,lty=3)
+
+#painting
+
+fxpoints <- fx[(xval >= qnorm(.9, mu, sd))]
+xvalpoints <- xval[(xval >= qnorm(.9, mu, sd))]
+
+polygon(rbind(
+      cbind(xvalpoints[1], 0),
+      cbind(xvalpoints, fxpoints),
+      cbind(xvalpoints[length(xvalpoints)], 0)),
+      col = "gray"
+)
+```
+
+
+
+
+v. Generate a realization of times based on a class of 10 students
+completing the question.
+```{r}
+
+
+hist(rnorm(10,mu,sd))
+```
+
+
+
+b. A meticulous gardener is interested in the length of blades
+of grass on his lawn. He believes that blade length X follows a
+normal distribution centered on 10 mm with a variance of 2 mm.
+i. Find the probability that a blade of grass is between 9:5 and
+11 mm long.
+
+
+```{r}
+mu=10
+var=2
+sigma=sqrt(var)
+
+pnorm(11,10,2)-pnorm(9.5,10,2)
+```
+
+
+ii. What are the standardized values of 9:5 and 11 in the context
+of this distribution? Using the standardized values, confirm
+that you can obtain the same probability you found in (i)
+with the standard normal density.
+
+```{r}
+dnorm(c(9.5,11),10,2)
+stan9.5 <- (9.5 - mu) / sigma
+stan11 <- (11 - mu) / sigma
+
+pnorm(c(stan9.5,stan11),0,1)
+pnorm(c(9.5,11),mu,sigma)
+
+```
+
+
+
+iii. Below which value are the shortest 2.5 percent of blade
+lengths found?
+
+```{r}
+shortest<-qnorm(0.025,mu,sigma)
+standshort<-(shortest-mu)/sigma
+pnorm(standshort)
+```
+
+
+
+
+
+
+Exercise 16.5
+
+
+
+a. Situated in the central north island of New Zealand, the Pohutu
+geyser is said to be the largest active geyser in the southern
+hemisphere. Suppose that it erupts an average of 3,500 times
+every year.
+i. With the intention of modeling a random variable X as the
+time between consecutive eruptions, evaluate the parameter
+value e with respect to a time scale in days (assume 365.25
+days per year to account for leap years).
+
+
+
+
+
+```{r}
+lambda<-3500
+
+
+lambda.day<-lambda/365.25
+```
+
+
+
+
+
+ii. Plot the density function of interest. What’s the mean wait in
+days between eruptions?
+```{r}
+
+
+xval<-seq(0,1,length.out=100)
+plot(xval,dexp(xval,lambda.day),main="Density function",xlab="x",ylab="f(x)",type = "l")
+abline(h=0,lty=3)
+abline(v=0,lty=3)
+```
+
+
+
+
+
+iii. What’s the probability of waiting less than 30 minutes for the
+next eruption?
+
+```{r}
+pexp(30,lambda.day/24/60)
+```
+
+
+
+
+iv. What waiting time defines the longest 10 percent of waits?
+Convert your answer to hours.
+```{r}
+qexp(.9,lambda.day)*24
+```
+
+
+
+
+
+
+b. You can also use the exponential distribution to model certain
+product survival times, or “time-to-failure” type of variables. Say
+a manufacturer of a particular air conditioning unit knows that
+the product has an average life of 11 years before it needs any
+type of repair callout. Let the random variable X represent the
+time until the necessary repair of one of these units and assume
+X follows an exponential distribution with e = 1=11.
+i. The company offers a five-year full repair warranty on this
+unit. What’s the probability that a randomly selected air
+conditioner owner makes use of the warranty?
+```{r}
+mu<-11
+lambda <- 1/mu
+
+#i
+pexp(5,lambda)
+```
+
+
+
+
+
+ii. A rival company offers a six-year guarantee on its competing
+air conditioning unit but knows that its units last, on average,
+only nine years before requiring some kind of repair. What
+are the chances of making use of that warranty?
+
+
+```{r}
+c.mu<-9
+c.lambda<-1/c.mu
+
+pexp(6,c.lambda)
+```
+
+
+
+
+
+
+iii. Determine the probabilities that the units in (i) and the
+units in (ii) last more than 15 years.
+
+
+
+```{r}
+#our product
+1-pexp(15,lambda)
+#their product
+1-pexp(15,c.lambda)
+```
 
